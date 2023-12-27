@@ -34,14 +34,7 @@ def fitness_function(individual, X, y):
 np.random.seed(123)
 X_train, X_test, y_train, y_test = data.generate_synthetic_data_reg(200, 0.01)
 
-plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train, cmap='viridis', label='Training Data', alpha=0.5)
-plt.title('Synthetic Regression Dataset')
-plt.xlabel('Feature 1')
-plt.ylabel('Feature 2')
-plt.colorbar(label='Target (y)')  # Add colorbar to show the correspondence between color and target value
-plt.legend()
-plt.savefig('dataset.png')
-plt.clf()
+
 
 n_neurons = 10
 n_weights = X_train.shape[1] * n_neurons + n_neurons
