@@ -3,7 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import keras, evolutionary_keras
 from evolutionary_keras.optimizers import NGA
-from MLP import MLP
+from MLP_old import MLP
 
 
 

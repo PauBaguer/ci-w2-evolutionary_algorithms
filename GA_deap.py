@@ -43,7 +43,7 @@ plt.legend()
 plt.savefig('dataset.png')
 plt.clf()
 
-n_neurons = 20
+n_neurons = 10
 n_weights = X_train.shape[1] * n_neurons + n_neurons
 
 
