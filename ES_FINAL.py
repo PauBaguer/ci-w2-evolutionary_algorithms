@@ -1,5 +1,6 @@
 import numpy as np
 import data
+import time
 import sys
 from deap import base, creator, tools, algorithms
 import tensorflow as tf
@@ -91,44 +92,56 @@ def logging_function(cma, logger):
 		sol = cma.best_solution()
 		print(f'Final solution at gen {cma.generation}: {sol} (fitness: {fitness})')
 
-np.random.seed(123)
-X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(2000, 0.05)
 
-max_neurons = 100
-n_weights = X_train.shape[1] * max_neurons + max_neurons
-initial_solution = [50, 1e-4]
-initial_solution.extend(np.random.uniform(-1, 1, n_weights))
 
-bounds = [[1, max_neurons], [1e-10, np.inf]]
-bounds.extend([[-np.inf, np.inf]] * n_weights)
+def do_ES(k):
+	np.random.seed(123)
 
-cma = CMA(
-	initial_solution=np.array(initial_solution),
-	initial_step_size=1.0,
-	enforce_bounds=np.array(bounds),
-	fitness_function=fitness_function,
-	callback_function=logging_function,
-)
+	global X_train, X_val, X_test, y_train, y_val, y_test
+	X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(2000, 0.05)
 
-print('Starting CMA-ES')
-with tf.device('/GPU:0'):
-	best_solution, best_fitness = cma.search(max_epochs)
-print('CMA-ES completed')
+	max_neurons = 100
+	n_weights = X_train.shape[1] * max_neurons + max_neurons
+	initial_solution = [50, 1e-4]
+	initial_solution.extend(np.random.uniform(-1, 1, n_weights))
 
-plt.plot(history['best_fitness_train'])
-plt.plot(history['best_fitness_val'])
-plt.xlabel('Generation')
-plt.ylabel('Fitness')
-plt.legend(['Training', 'Validation'])
-plt.savefig('ES_training_fitness.png')
-plt.clf()
+	bounds = [[1, max_neurons], [1e-10, np.inf]]
+	bounds.extend([[-np.inf, np.inf]] * n_weights)
 
-plt.plot(history['best_mse_train'])
-plt.plot(history['best_mse_val'])
-plt.xlabel('Generation')
-plt.ylabel('MSE')
-plt.legend(['Training', 'Validation'])
-plt.savefig('ES_training_mse.png')
-plt.clf()
+	cma = CMA(
+		initial_solution=np.array(initial_solution),
+		initial_step_size=1.0,
+		enforce_bounds=np.array(bounds),
+		fitness_function=fitness_function,
+		callback_function=logging_function,
+	)
 
-print('MSE on test set:', obtain_mse(best_solution, X_test, y_test))
+	start_time = time.time()
+	print('Starting CMA-ES')
+	with tf.device('/GPU:0'):
+		best_solution, best_fitness = cma.search(max_epochs)
+	end_time = time.time()
+	print('CMA-ES completed')
+
+	train_time = end_time-start_time
+	plt.plot(history['best_fitness_train'])
+	plt.plot(history['best_fitness_val'])
+	plt.xlabel('Generation')
+	plt.ylabel('Fitness')
+	plt.legend(['Training', 'Validation'])
+	plt.savefig(f'ES_training_fitness{k}.png')
+	plt.clf()
+
+	plt.plot(history['best_mse_train'])
+	plt.plot(history['best_mse_val'])
+	plt.xlabel('Generation')
+	plt.ylabel('MSE')
+	plt.legend(['Training', 'Validation'])
+	plt.savefig(f'ES_training_mse_{k}.png')
+	plt.clf()
+
+	mse = obtain_mse(best_solution, X_test, y_test)
+	print('MSE on test set:', mse)
+	n_neurons = best_solution[0]
+
+	return mse, train_time, n_neurons
