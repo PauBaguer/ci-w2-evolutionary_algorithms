@@ -36,7 +36,7 @@ def obtain_mse(individual, X, y):
 
 @tf.function
 def obtain_fitness(individual, X, y):
-	n_neurons = individual[0]
+	n_neurons = int(individual[0])
 	wd = individual[1]
 	weights = individual[2:]
 
@@ -92,7 +92,7 @@ def logging_function(cma, logger):
 
 
 
-def do_ES(k, folder, sample_size, noise_level):
+def do_ES(k, n, h, folder):
 	np.random.seed(123)
 	history = {
 		'best_fitness_train': [],
@@ -102,7 +102,7 @@ def do_ES(k, folder, sample_size, noise_level):
 	}
 
 	global X_train, X_val, X_test, y_train, y_val, y_test
-	X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(sample_size, noise_level)
+	X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(10000, noise_level=n, hardness=h)
 
 	max_neurons = 100
 	n_weights = X_train.shape[1] * max_neurons + max_neurons
@@ -116,6 +116,7 @@ def do_ES(k, folder, sample_size, noise_level):
 		population_size=100,
 		initial_solution=np.array(initial_solution),
 		initial_step_size=1.0,
+		population_size=100,
 		enforce_bounds=np.array(bounds),
 		fitness_function=fitness_function,
 		callback_function=logging_function,
@@ -135,7 +136,7 @@ def do_ES(k, folder, sample_size, noise_level):
 	plt.ylabel('Fitness')
 	plt.grid(True)
 	plt.legend(['Training', 'Validation'])
-	plt.savefig(f'{folder}/ES_training_fitness{k}.png')
+	plt.savefig(f'{folder}/Fitness/ES_training_fitness{k}_{n}_{h}.png')
 	plt.clf()
 
 	plt.plot(history['best_mse_train'])
@@ -144,11 +145,12 @@ def do_ES(k, folder, sample_size, noise_level):
 	plt.ylabel('MSE')
 	plt.grid(True)
 	plt.legend(['Training', 'Validation'])
-	plt.savefig(f'{folder}/ES_training_mse_{k}.png')
+	plt.savefig(f'{folder}/MSE/ES_training_mse_{k}_{n}_{h}.png')
 	plt.clf()
 
 	mse = obtain_mse(best_solution, X_test, y_test)
 	print('MSE on test set:', mse)
-	n_neurons = best_solution[0]
+	n_neurons = int(best_solution[0])
+	wd = best_solution[1]
 
-	return mse, train_time, n_neurons
+	return mse, train_time, n_neurons, wd
