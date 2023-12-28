@@ -67,13 +67,13 @@ def obtain_fitness(individual, X, y):
 
 
 
-def do_GA(k):
+def do_GA(k, n, h):
     global X_train, X_val, X_test, y_train, y_val, y_test
     global history
     global max_neurons
     global max_epochs
     global ga
-    X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(2000, 0.05)
+    X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(10000, noise_level=n, hardness=h)
     max_neurons = 100
     max_epochs = 150
     n_weights = X_train.shape[1] * max_neurons + max_neurons
@@ -136,7 +136,7 @@ def do_GA(k):
     plt.ylabel('Fitness')
     plt.legend(['Training', 'Validation'])
     plt.grid(True)
-    plt.savefig(f'GA_training_fitness_{k}.png')
+    plt.savefig(f'Fitness/GA_training_fitness_{k}_{n}_{h}.png')
     plt.clf()
 
     plt.figure(figsize=(4, 2))
@@ -146,10 +146,11 @@ def do_GA(k):
     plt.ylabel('MSE')
     plt.legend(['Training', 'Validation'])
     plt.grid(True)
-    plt.savefig(f'GA_training_mse_{k}.png')
+    plt.savefig(f'MSE/GA_training_mse_{k}_{n}_{h}.png')
     plt.clf()
     mse = obtain_mse(best_individual, X_test, y_test)
     print('MSE on test set:', mse)
     n_neurons = best_individual[0]
+    wd = best_individual[1]
 
-    return mse, train_time, n_neurons
+    return mse, train_time, n_neurons, wd

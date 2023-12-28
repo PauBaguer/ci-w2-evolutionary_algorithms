@@ -68,7 +68,7 @@ def fitness_function(individuals):
 	fitness = tf.convert_to_tensor(fitness)
 	return fitness
 
-max_epochs = 500
+max_epochs = 150
 history = {
 	'best_fitness_train': [],
 	'best_fitness_val': [],
@@ -94,11 +94,11 @@ def logging_function(cma, logger):
 
 
 
-def do_ES(k):
+def do_ES(k, n, h):
 	np.random.seed(123)
 
 	global X_train, X_val, X_test, y_train, y_val, y_test
-	X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(2000, 0.05)
+	X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(10000, noise_level=n, hardness=h)
 
 	max_neurons = 100
 	n_weights = X_train.shape[1] * max_neurons + max_neurons
@@ -111,6 +111,7 @@ def do_ES(k):
 	cma = CMA(
 		initial_solution=np.array(initial_solution),
 		initial_step_size=1.0,
+		population_size=100,
 		enforce_bounds=np.array(bounds),
 		fitness_function=fitness_function,
 		callback_function=logging_function,
@@ -129,7 +130,7 @@ def do_ES(k):
 	plt.xlabel('Generation')
 	plt.ylabel('Fitness')
 	plt.legend(['Training', 'Validation'])
-	plt.savefig(f'ES_training_fitness{k}.png')
+	plt.savefig(f'Fitness/ES_training_fitness{k}_{n}_{h}.png')
 	plt.clf()
 
 	plt.plot(history['best_mse_train'])
@@ -137,11 +138,12 @@ def do_ES(k):
 	plt.xlabel('Generation')
 	plt.ylabel('MSE')
 	plt.legend(['Training', 'Validation'])
-	plt.savefig(f'ES_training_mse_{k}.png')
+	plt.savefig(f'MSE/ES_training_mse_{k}_{n}_{h}.png')
 	plt.clf()
 
 	mse = obtain_mse(best_solution, X_test, y_test)
 	print('MSE on test set:', mse)
 	n_neurons = best_solution[0]
+	wd = best_solution[1]
 
-	return mse, train_time, n_neurons
+	return mse, train_time, n_neurons, wd
