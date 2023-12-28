@@ -17,8 +17,8 @@ def main():
     for k in range(k_runs):
         for n in noises:
             for h in hardness:
-                mse, time, n_neurons = MLP.do_MLP(k, n, h, folder)
-                MLP_runs[count] = {'mse': mse, 'time': time, 'n_neurons': float(n_neurons), 'weight_decay': 10e-4}
+                mse, time, n_neurons = MLP.do_MLP(k, n, h)
+                MLP_runs[count] = {'mse': mse, 'time': time, 'n_neurons': int(n_neurons)}
                 count += 1
 
     with open(f"{folder}/MLP_runs.json", "w") as js:

@@ -13,7 +13,7 @@ tf.config.run_functions_eagerly(True)
 
 @tf.function
 def obtain_mse(individual, X, y):
-	n_neurons = individual[0]
+	n_neurons = int(individual[0])
 	wd = individual[1]
 	weights = individual[2:]
 
@@ -88,7 +88,7 @@ def logging_function(cma, logger):
 
 	if cma.termination_criterion_met or cma.generation == max_epochs:
 		sol = cma.best_solution()
-		print(f'Final solution at gen {cma.generation}: {sol} (fitness: {fitness})')
+		print(f'Final solution at gen {cma.generation} - (fitness: {fitness})')
 
 
 
