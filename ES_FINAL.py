@@ -113,7 +113,6 @@ def do_ES(k, n, h, folder):
 	bounds.extend([[-np.inf, np.inf]] * n_weights)
 
 	cma = CMA(
-		population_size=100,
 		initial_solution=np.array(initial_solution),
 		initial_step_size=1.0,
 		population_size=100,
