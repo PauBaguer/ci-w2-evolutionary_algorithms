@@ -18,7 +18,7 @@ tf.config.run_functions_eagerly(True)
 
 @tf.function
 def obtain_mse(individual, X, y):
-    n_neurons = individual[0]
+    n_neurons = int(individual[0])
     wd = individual[1]
     weights = individual[2:]
 
@@ -40,7 +40,7 @@ def obtain_mse(individual, X, y):
 
 @tf.function
 def obtain_fitness(individual, X, y):
-    n_neurons = individual[0]
+    n_neurons = int(individual[0])
     wd = individual[1]
     weights = individual[2:]
 
@@ -107,7 +107,7 @@ def do_GA(k, n, h):
             if g % 10 == 0:
                 print('Generation: {}, best fitness: {:.3f}'.format(g, -engine.fmax))
             if g == max_epochs:
-                print(f'Final solution at gen {g}: {best_indv} (fitness: {-engine.fmax})')
+                print(f'Final solution at gen {g} - (fitness: {-engine.fmax})')
             history['best_fitness_train'].append(-engine.fmax)
             history['best_fitness_val'].append(obtain_fitness(best_indv, X_val, y_val))
             history['best_mse_train'].append(obtain_mse(best_indv, X_train, y_train))
