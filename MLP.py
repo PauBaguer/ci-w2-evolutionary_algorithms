@@ -9,11 +9,11 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 
 
-def do_MLP(k):
+def do_MLP(k, folder, sample_size, noise_level):
     np.random.seed(123)
-    X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(200, 0.01)
+    X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(sample_size, noise_level)
     n_neurons = 100
-    epochs = 200
+    epochs = 50
     learning_rate = 0.01
 
 
@@ -28,14 +28,14 @@ def do_MLP(k):
     end_time = time.time()
     train_time = end_time - start_time
 
-    plt.figure(figsize=(4, 2))
+
     plt.plot(history.history['loss'], label='Training')
     plt.plot(history.history['val_loss'], label='Validation')
     plt.xlabel('Epochs')
     plt.ylabel('MSE')
     plt.legend()
     plt.grid(True)
-    plt.savefig(f'MLP_training_mse_{k}.png')
+    plt.savefig(f'{folder}/MLP_training_mse_{k}.png')
 
     predictions = model.predict(X_test)
     mse = mean_squared_error(y_test, predictions)

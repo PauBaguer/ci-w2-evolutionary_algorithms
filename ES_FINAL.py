@@ -1,8 +1,6 @@
 import numpy as np
 import data
 import time
-import sys
-from deap import base, creator, tools, algorithms
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import Sequential
@@ -68,7 +66,7 @@ def fitness_function(individuals):
 	fitness = tf.convert_to_tensor(fitness)
 	return fitness
 
-max_epochs = 500
+max_epochs = 150
 history = {
 	'best_fitness_train': [],
 	'best_fitness_val': [],
@@ -94,11 +92,17 @@ def logging_function(cma, logger):
 
 
 
-def do_ES(k):
+def do_ES(k, folder, sample_size, noise_level):
 	np.random.seed(123)
+	history = {
+		'best_fitness_train': [],
+		'best_fitness_val': [],
+		'best_mse_train': [],
+		'best_mse_val': []
+	}
 
 	global X_train, X_val, X_test, y_train, y_val, y_test
-	X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(2000, 0.05)
+	X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(sample_size, noise_level)
 
 	max_neurons = 100
 	n_weights = X_train.shape[1] * max_neurons + max_neurons
@@ -109,6 +113,7 @@ def do_ES(k):
 	bounds.extend([[-np.inf, np.inf]] * n_weights)
 
 	cma = CMA(
+		population_size=100,
 		initial_solution=np.array(initial_solution),
 		initial_step_size=1.0,
 		enforce_bounds=np.array(bounds),
@@ -128,16 +133,18 @@ def do_ES(k):
 	plt.plot(history['best_fitness_val'])
 	plt.xlabel('Generation')
 	plt.ylabel('Fitness')
+	plt.grid(True)
 	plt.legend(['Training', 'Validation'])
-	plt.savefig(f'ES_training_fitness{k}.png')
+	plt.savefig(f'{folder}/ES_training_fitness{k}.png')
 	plt.clf()
 
 	plt.plot(history['best_mse_train'])
 	plt.plot(history['best_mse_val'])
 	plt.xlabel('Generation')
 	plt.ylabel('MSE')
+	plt.grid(True)
 	plt.legend(['Training', 'Validation'])
-	plt.savefig(f'ES_training_mse_{k}.png')
+	plt.savefig(f'{folder}/ES_training_mse_{k}.png')
 	plt.clf()
 
 	mse = obtain_mse(best_solution, X_test, y_test)

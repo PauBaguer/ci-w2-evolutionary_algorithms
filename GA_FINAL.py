@@ -67,13 +67,13 @@ def obtain_fitness(individual, X, y):
 
 
 
-def do_GA(k):
+def do_GA(k, folder, sample_size, noise_level):
     global X_train, X_val, X_test, y_train, y_val, y_test
-    global history
+
     global max_neurons
     global max_epochs
     global ga
-    X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(2000, 0.05)
+    X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(sample_size, noise_level)
     max_neurons = 100
     max_epochs = 150
     n_weights = X_train.shape[1] * max_neurons + max_neurons
@@ -129,24 +129,24 @@ def do_GA(k):
     # Print the best individual and its fitness value
     print(f"Best individual: {best_individual}, Best fitness: {-ga.fmax}")
 
-    plt.figure(figsize=(4, 2))
+
     plt.plot(history['best_fitness_train'])
     plt.plot(history['best_fitness_val'])
     plt.xlabel('Generation')
     plt.ylabel('Fitness')
     plt.legend(['Training', 'Validation'])
     plt.grid(True)
-    plt.savefig(f'GA_training_fitness_{k}.png')
+    plt.savefig(f'{folder}/GA_training_fitness_{k}.png')
     plt.clf()
 
-    plt.figure(figsize=(4, 2))
+
     plt.plot(history['best_mse_train'])
     plt.plot(history['best_mse_val'])
     plt.xlabel('Generation')
     plt.ylabel('MSE')
     plt.legend(['Training', 'Validation'])
     plt.grid(True)
-    plt.savefig(f'GA_training_mse_{k}.png')
+    plt.savefig(f'{folder}/GA_training_mse_{k}.png')
     plt.clf()
     mse = obtain_mse(best_individual, X_test, y_test)
     print('MSE on test set:', mse)
