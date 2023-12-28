@@ -34,7 +34,7 @@ def main():
         for n in noises:
             for h in hardness:
                 mse, time, n_neurons, wd = GA_FINAL.do_GA(k, n, h, folder)
-                GA_runs[count] = {'mse': mse, 'time': time, 'n_neurons': float(n_neurons), 'weight_decay': wd}
+                GA_runs[count] = {'mse': mse, 'time': time, 'n_neurons': float(n_neurons), 'weight_decay': float(wd)}
                 count += 1
 
     with open(f"{folder}/GA_runs.json", "w") as js:
@@ -51,7 +51,7 @@ def main():
         for n in noises:
             for h in hardness:
                 mse, time, n_neurons, wd = ES_FINAL.do_ES(k, n, h, folder)
-                ES_runs[count] = {'mse':mse, 'time':time, 'n_neurons':float(n_neurons), 'weight_decay':wd}
+                ES_runs[count] = {'mse':mse, 'time':time, 'n_neurons':float(n_neurons), 'weight_decay':float(wd)}
                 count += 1
 
     with open(f"{folder}/ES_runs.json", "w") as js:
