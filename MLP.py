@@ -20,7 +20,7 @@ def do_MLP(k, folder, sample_size, noise_level):
     model = Sequential()
     model.add(Dense(n_neurons, input_dim=X_train.shape[1], activation='relu', use_bias=False))
     model.add(Dense(1, activation='linear', use_bias=False))
-    optimizer = Adam(learning_rate=learning_rate)
+    optimizer = Adam(learning_rate=learning_rate, weight_decay=10e-4)
     model.compile(loss='mean_squared_error', optimizer=optimizer)
 
     start_time = time.time()

@@ -4,7 +4,7 @@ import json
 import ES_FINAL, GA_FINAL, MLP
 
 def main():
-    folder = "run3"
+    folder = "run2"
     k_runs = 3
     dataset_sample_size = 2000
     dataset_noise_level = 0.25
