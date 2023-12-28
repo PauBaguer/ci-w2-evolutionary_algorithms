@@ -67,9 +67,9 @@ def obtain_fitness(individual, X, y):
 
 
 
-def do_GA(k, n, h):
+def do_GA(k, n, h, folder):
     global X_train, X_val, X_test, y_train, y_val, y_test
-    global history
+
     global max_neurons
     global max_epochs
     global ga
@@ -129,28 +129,28 @@ def do_GA(k, n, h):
     # Print the best individual and its fitness value
     print(f"Best individual: {best_individual}, Best fitness: {-ga.fmax}")
 
-    plt.figure(figsize=(4, 2))
+
     plt.plot(history['best_fitness_train'])
     plt.plot(history['best_fitness_val'])
     plt.xlabel('Generation')
     plt.ylabel('Fitness')
     plt.legend(['Training', 'Validation'])
     plt.grid(True)
-    plt.savefig(f'Fitness/GA_training_fitness_{k}_{n}_{h}.png')
+    plt.savefig(f'{folder}/Fitness/GA_training_fitness_{k}_{n}_{h}.png')
     plt.clf()
 
-    plt.figure(figsize=(4, 2))
+
     plt.plot(history['best_mse_train'])
     plt.plot(history['best_mse_val'])
     plt.xlabel('Generation')
     plt.ylabel('MSE')
     plt.legend(['Training', 'Validation'])
     plt.grid(True)
-    plt.savefig(f'MSE/GA_training_mse_{k}_{n}_{h}.png')
+    plt.savefig(f'{folder}/MSE/GA_training_mse_{k}_{n}_{h}.png')
     plt.clf()
     mse = obtain_mse(best_individual, X_test, y_test)
     print('MSE on test set:', mse)
-    n_neurons = best_individual[0]
+    n_neurons = int(best_individual[0])
     wd = best_individual[1]
 
     return mse, train_time, n_neurons, wd

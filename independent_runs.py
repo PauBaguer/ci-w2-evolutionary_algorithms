@@ -1,11 +1,10 @@
 
 import numpy as np
 import json
-import ES_FINAL, GA_FINAL
-import MLP
-
+import ES_FINAL, GA_FINAL, MLP
 
 def main():
+    folder = "run2"
     k_runs = 3
     noises = [0, 10]
     hardness = [2, 5]
@@ -22,7 +21,7 @@ def main():
                 MLP_runs[count] = {'mse': mse, 'time': time, 'n_neurons': int(n_neurons)}
                 count += 1
 
-    with open("MLP_runs.json", "w") as js:
+    with open(f"{folder}/MLP_runs.json", "w") as js:
         json.dump(MLP_runs, js)
 
     ###################
@@ -38,7 +37,7 @@ def main():
                 GA_runs[count] = {'mse': mse, 'time': time, 'n_neurons': int(n_neurons), 'weight_decay': wd}
                 count += 1
 
-    with open("GA_runs.json", "w") as js:
+    with open(f"{folder}/GA_runs.json", "w") as js:
         json.dump(GA_runs, js)
 
 
@@ -55,7 +54,7 @@ def main():
                 ES_runs[count] = {'mse':mse, 'time':time, 'n_neurons':int(n_neurons), 'weight_decay':wd}
                 count += 1
 
-    with open("ES_runs.json", "w") as js:
+    with open(f"{folder}/ES_runs.json", "w") as js:
         json.dump(ES_runs, js)
 
 

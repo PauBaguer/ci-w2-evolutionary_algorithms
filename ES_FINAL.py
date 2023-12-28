@@ -1,8 +1,6 @@
 import numpy as np
 import data
 import time
-import sys
-from deap import base, creator, tools, algorithms
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import Sequential
@@ -94,8 +92,14 @@ def logging_function(cma, logger):
 
 
 
-def do_ES(k, n, h):
+def do_ES(k, n, h, folder):
 	np.random.seed(123)
+	history = {
+		'best_fitness_train': [],
+		'best_fitness_val': [],
+		'best_mse_train': [],
+		'best_mse_val': []
+	}
 
 	global X_train, X_val, X_test, y_train, y_val, y_test
 	X_train, X_val, X_test, y_train, y_val, y_test = data.generate_synthetic_data_reg(10000, noise_level=n, hardness=h)
@@ -129,21 +133,23 @@ def do_ES(k, n, h):
 	plt.plot(history['best_fitness_val'])
 	plt.xlabel('Generation')
 	plt.ylabel('Fitness')
+	plt.grid(True)
 	plt.legend(['Training', 'Validation'])
-	plt.savefig(f'Fitness/ES_training_fitness{k}_{n}_{h}.png')
+	plt.savefig(f'{folder}/Fitness/ES_training_fitness{k}_{n}_{h}.png')
 	plt.clf()
 
 	plt.plot(history['best_mse_train'])
 	plt.plot(history['best_mse_val'])
 	plt.xlabel('Generation')
 	plt.ylabel('MSE')
+	plt.grid(True)
 	plt.legend(['Training', 'Validation'])
-	plt.savefig(f'MSE/ES_training_mse_{k}_{n}_{h}.png')
+	plt.savefig(f'{folder}/MSE/ES_training_mse_{k}_{n}_{h}.png')
 	plt.clf()
 
 	mse = obtain_mse(best_solution, X_test, y_test)
 	print('MSE on test set:', mse)
-	n_neurons = best_solution[0]
+	n_neurons = int(best_solution[0])
 	wd = best_solution[1]
 
 	return mse, train_time, n_neurons, wd
