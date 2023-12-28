@@ -26,15 +26,18 @@ print()
 
 MLP_mse = [run['mse']for run in MLP_data.values()]
 MLP_time = [run['time']for run in MLP_data.values()]
-MLP_n_neurons = [run['time']for run in MLP_data.values()]
+MLP_n_neurons = [run['n_neurons']for run in MLP_data.values()]
+MLP_wd = [run['weight_decay']for run in MLP_data.values()]
 
 GA_mse = [run['mse']for run in GA_data.values()]
 GA_time = [run['time']for run in GA_data.values()]
-GA_n_neurons = [run['time']for run in GA_data.values()]
+GA_n_neurons = [run['n_neurons']for run in GA_data.values()]
+GA_wd = [run['weight_decay']for run in GA_data.values()]
 
 ES_mse = [run['mse']for run in ES_data.values()]
 ES_time = [run['time']for run in ES_data.values()]
-ES_n_neurons = [run['time']for run in ES_data.values()]
+ES_n_neurons = [run['n_neurons']for run in ES_data.values()]
+ES_wd = [run['weight_decay']for run in ES_data.values()]
 
 combine_indexes_n0_h2 = np.array([0,4,8])
 combine_indexes_n0_h5 = np.array([1,5,9])
@@ -56,7 +59,7 @@ def average_runs(arr):
     })
 
     for col in df.columns:
-        print(f"MSE: {np.mean(df[col]):3f}+-{stats.sem(df[col]) * 1.967:3f}")
+        print(f"MSE: {np.mean(df[col]):.2E}+-{stats.sem(df[col]) * 1.967:.2E}")
 
     return df
 
@@ -65,18 +68,30 @@ print("MSE")
 MLP_mse_df = average_runs(MLP_mse)
 print("Training time")
 MLP_time_df = average_runs(MLP_time)
+print("Neurons")
+MLP_neurons_df = average_runs(MLP_n_neurons)
+print("Weight decay")
+MLP_wd_df = average_runs(MLP_wd)
 
 print("===GA===")
 print("MSE")
 GA_mse_df = average_runs(GA_mse)
 print("Training time")
 GA_time_df = average_runs(GA_time)
+print("Neurons")
+GA_neurons_df = average_runs(GA_n_neurons)
+print("Weight decay")
+GA_wd_df = average_runs(GA_wd)
 
 print("===ES===")
 print("MSE")
 ES_mse_df = average_runs(ES_mse)
 print("Training time")
 ES_time_df = average_runs(ES_time)
+print("Neurons")
+ES_neurons_df = average_runs(ES_n_neurons)
+print("Weight decay")
+ES_wd_df = average_runs(ES_wd)
 
 
 

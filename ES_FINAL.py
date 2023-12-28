@@ -67,12 +67,12 @@ def fitness_function(individuals):
 	return fitness
 
 max_epochs = 150
-history = {
-	'best_fitness_train': [],
-	'best_fitness_val': [],
-	'best_mse_train': [],
-	'best_mse_val': []
-}
+# history = {
+# 	'best_fitness_train': [],
+# 	'best_fitness_val': [],
+# 	'best_mse_train': [],
+# 	'best_mse_val': []
+# }
 def logging_function(cma, logger):
 	fitness = cma.best_fitness()
 	history['best_fitness_train'].append(fitness)
@@ -94,6 +94,7 @@ def logging_function(cma, logger):
 
 def do_ES(k, n, h, folder):
 	np.random.seed(123)
+	global history
 	history = {
 		'best_fitness_train': [],
 		'best_fitness_val': [],
